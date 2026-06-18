@@ -24,7 +24,7 @@ const requestListener = function (req, res) {
         req.on('end', () => {
             try{
                 const title = JSON.parse(body).title;
-                if (title !== undefined) {
+                if (title) {
                     const todo = {
                     "title": title,
                     "id": uuidv4(),
@@ -79,8 +79,9 @@ const requestListener = function (req, res) {
             const todo = JSON.parse(body).title;
             const id = req.url.split('/').pop();
             const index = todos.findIndex(todo => todo.id === id);
-            console.log(index);
-            if (index !== undefined && index !== -1) {
+            if (!todo) {
+                errorHandle(res);
+            } else if (index !== -1) {
                 todos[index].title = todo;
                 res.writeHead(200,headers);
                 res.write(JSON.stringify({
@@ -115,6 +116,4 @@ const requestListener = function (req, res) {
     } 
 }
 const server = http.createServer(requestListener);
-server.listen(process.env.PORT || 3005, () => {
-    console.log('Server is running on port 3005');
-});
+server.listen(process.env.PORT || 3005);
