@@ -1,0 +1,136 @@
+{
+  "info": {
+    "_postman_id": "455f1c2c-b987-446c-939f-776fd0285268",
+    "name": "Todolist-Render",
+    "description": "### Welcome to Postman! This is your first collection.\n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests  \n• Test your API in real-world scenarios  \n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "55581010",
+    "_collection_link": "https://go.postman.co/collection/55581010-455f1c2c-b987-446c-939f-776fd0285268?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "取得所有代辦",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "two026-preview-homework.onrender.com/todos",
+          "host": [
+            "two026-preview-homework",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "todos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "新增單筆代辦",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"title\":\"採買12\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "two026-preview-homework.onrender.com/todos",
+          "host": [
+            "two026-preview-homework",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "todos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "刪除所有代辦",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"title\":\"採買12\"\r\n}"
+        },
+        "url": {
+          "raw": "two026-preview-homework.onrender.com/todos",
+          "host": [
+            "two026-preview-homework",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "todos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "刪除單筆代辦",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"title\":\"採買12\"\r\n}"
+        },
+        "url": {
+          "raw": "two026-preview-homework.onrender.com/todos/00417086-4317-4b3e-ac6f-57c359dd8193",
+          "host": [
+            "two026-preview-homework",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "todos",
+            "00417086-4317-4b3e-ac6f-57c359dd8193"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "修改單筆代辦",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"title\":\"採買1234\"\r\n}"
+        },
+        "url": {
+          "raw": "two026-preview-homework.onrender.com/todos/cea572be-1c6e-4a46-b226-26960ffb645d",
+          "host": [
+            "two026-preview-homework",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "todos",
+            "cea572be-1c6e-4a46-b226-26960ffb645d"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "postman_api_key_0kzb",
+      "secret": true
+    }
+  ]
+}
