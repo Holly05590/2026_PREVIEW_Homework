@@ -1,119 +1,73 @@
-const http= require('http');
+const http = require('http');
 const { v4: uuidv4 } = require('uuid');
+const headers = require('./headers');
 const errorHandle = require('./errorHandle');
+const successHandle = require('./successHandle');
+const notFoundHandle = require('./notFoundHandle');
 const todos = [];
 const requestListener = function (req, res) {
-    const headers = {
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization, Content-Length, X-Requested-With',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'PATCH, POST, GET,OPTIONS,DELETE',
-        'Content-Type': 'application/json'};
     let body = '';
     req.on('data', chunk => {
         body += chunk;
     });
-        
+
     if (req.url == '/todos' && req.method == 'GET') {
-    res.writeHead(200,headers);
-    res.write(JSON.stringify({
-        "status": "success",
-        "data": todos,
-        }));
-    res.end();
+        successHandle(res, todos);
     } else if (req.url == '/todos' && req.method == 'POST') {
         req.on('end', () => {
-            try{
+            try {
                 const title = JSON.parse(body).title;
-                if (title) {
+                if (title && title.trim()) {
                     const todo = {
-                    "title": title,
-                    "id": uuidv4(),
-                }
-                todos.push(todo);
-                res.writeHead(200,headers);
-                res.write(JSON.stringify({
-                "status": "success",
-                "data": todos,
-                }));
-                res.end();
+                        "title": title.trim(),
+                        "id": uuidv4(),
+                    }
+                    todos.push(todo);
+                    successHandle(res, todos);
                 } else {
                     errorHandle(res);
                 }
-                
-            }catch(error){
+            } catch (error) {
                 errorHandle(res);
             }
         });
     } else if (req.url == '/todos' && req.method == 'DELETE') {
         todos.length = 0;
-        res.writeHead(200,headers);
-        res.write(JSON.stringify({
-            "status": "success",
-            "data": todos,
-            "message": "清空成功",
-            }));
-            res.end();
+        successHandle(res, todos, "清空成功");
     } else if (req.url.startsWith('/todos/') && req.method == 'DELETE') {
         const id = req.url.split('/').pop();
-        const index = todos.findIndex(todo => todo.id === id); 
+        const index = todos.findIndex(todo => todo.id === id);
         if (index !== -1) {
             todos.splice(index, 1);
-            res.writeHead(200,headers);
-            res.write(JSON.stringify({
-                "status": "success",
-                "data": todos,
-                "message": "刪除成功",
-                }));
-                res.end();
+            successHandle(res, todos, "刪除成功");
         } else {
-            res.writeHead(404,headers);
-            res.write(JSON.stringify({
-                "status": "false",
-                "message": "無此 ID",
-                }));
-            res.end();
+            notFoundHandle(res, "無此 ID");
         }
     } else if (req.url.startsWith('/todos/') && req.method == 'PATCH') {
         req.on('end', () => {
-        try {
-            const todo = JSON.parse(body).title;
-            const id = req.url.split('/').pop();
-            const index = todos.findIndex(todo => todo.id === id);
-            if (!todo) {
+            try {
+                const title = JSON.parse(body).title;
+                const id = req.url.split('/').pop();
+                const index = todos.findIndex(todo => todo.id === id);
+                if (!title || !title.trim()) {
+                    errorHandle(res);
+                } else if (index !== -1) {
+                    todos[index].title = title.trim();
+                    successHandle(res, todos, "更新成功");
+                } else {
+                    notFoundHandle(res, "無此 ID");
+                }
+            } catch (error) {
+                console.log(error);
                 errorHandle(res);
-            } else if (index !== -1) {
-                todos[index].title = todo;
-                res.writeHead(200,headers);
-                res.write(JSON.stringify({
-                    "status": "success",
-                    "data": todos,
-                    "message": "更新成功",
-                    }));
-                    res.end();
-            } else {
-                res.writeHead(404,headers);
-                res.write(JSON.stringify({
-                    "status": "false",
-                    "message": "無此 ID",
-                    }));
-                res.end();
             }
-        } catch (error) {
-            console.log(error);
-            errorHandle(res);
-        }
         });
     } else if (req.method == 'OPTIONS') {
-        res.writeHead(200,headers);
+        res.writeHead(200, headers);
         res.end();
     } else {
-    res.writeHead(404,headers);
-    res.write(JSON.stringify({
-        "status": "false",
-        "message": "無此網站路由",
-        }));
-    res.end();
-    } 
+        notFoundHandle(res, "無此網站路由");
+    }
 }
 const server = http.createServer(requestListener);
 server.listen(process.env.PORT || 3005);
